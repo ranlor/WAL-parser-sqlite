@@ -20,6 +20,13 @@
 #include "Formatters/Input/StringInput.h"
 #include "ArgParsing/ArgsParsing.h"
 
+#define EXIT_OK 0
+#define ARG_ERR 1
+#define PATH_ERR 2
+#define READ_ERR 3
+#define HEAD_READ_ERR 4
+#define MISSING_OPT_ERR 5
+
 inline bool isFrameWeakValid(const wal::readers::WalHeaderReader& header,
                              const wal::readers::FrameHeader& frameHeader)
 {
@@ -52,17 +59,17 @@ enum class VerboseLevels
 int main(int argc, char* argv[])
 {
     wal::arg_parsing::ArgsParsing args{
-        "wal-parser", 
+        "wal-parser",
         "parse binary WAL (Write-Ahead-Log) sqlite file & has options to output it",
         argc, argv};
 
-    args.addArg({"--input", "-i"}, "filepath input of wal sql binary file", false /*optional*/, true /*get any input*/); 
-    args.addArg({"--help", "-h"}, "show this usage", true /*optional*/); 
-    args.addArg<VerboseLevels>({"--verbose", "-v"}, "verbose levels", true /*optional*/ , {{"info",VerboseLevels::Info},{"debug",VerboseLevels::Debug}}); 
-    args.addArg({"--csv", "-csv"}, "[default] will output csv format with defined columns i.e. -csv 'col1,col2'", true /*optional*/, true /*get any input*/); 
-    args.addArg({"--sql", "-s"}, "will output sql insert statements with the given schema file (only supports single create table schema) i.e. -s '../schema.sql' ", true /*optional*/, true /*get any input*/); 
-    args.addArg({"--strict", "-c"}, "if using --sql arg will output only insert statement that are valid with the schema", true /*optional*/); 
-    args.addArg({"--lenient", "-l"}, "[default] if using --sql arg will output any insert statement, even if the column don't match", true /*optional*/); 
+    args.addArg({"--input", "-i"}, "filepath input of wal sql binary file", false /*optional*/, true /*get any input*/);
+    args.addArg({"--help", "-h"}, "show this usage", true /*optional*/);
+    args.addArg<VerboseLevels>({"--verbose", "-v"}, "verbose levels", true /*optional*/ , {{"info",VerboseLevels::Info},{"debug",VerboseLevels::Debug}});
+    args.addArg({"--csv", "-csv"}, "[default] will output csv format with defined columns i.e. -csv 'col1,col2'", true /*optional*/, true /*get any input*/);
+    args.addArg({"--sql", "-s"}, "will output sql insert statements with the given schema file (only supports single create table schema) i.e. -s '../schema.sql' ", true /*optional*/, true /*get any input*/);
+    args.addArg({"--strict", "-c"}, "if using --sql arg will output only insert statement that are valid with the schema", true /*optional*/);
+    args.addArg({"--lenient", "-l"}, "[default] if using --sql arg will output any insert statement, even if the column don't match", true /*optional*/);
     args.addArg({"--valid-frames", "-f"}, "prase only btree frames that have valid checksum", true /*optional*/);
     args.addArg({"--index", "-x"}, "parse index btree data instead of table data, will only print the indices as is", true /*optional*/);
     args.addArg({"--quiet", "-q"}, "don't output any logs, not even errors", true /*optional*/);
@@ -71,24 +78,24 @@ int main(int argc, char* argv[])
     if ( args.argExists("--help") )
     {
         std::cout << args.usage() << std::endl;
-        return 0;
+        return EXIT_OK;
     }
 
     if ( args.anyErrors() )
     {
         std::cout << args.usage() << std::endl;
-        for(auto& error : args.getErrorList()) 
+        for(auto& error : args.getErrorList())
         {
             std::cerr << error << std::endl;
         }
-        return 1;    
+        return ARG_ERR;
     }
 
     wal::Log::get().setLogLevel(wal::Log::ReportLevel::Error);
 
     bool outputIndexes = args.argExists("--index");
 
-    auto verboseVal = args.getArgValue<VerboseLevels>("--verbose"); 
+    auto verboseVal = args.getArgValue<VerboseLevels>("--verbose");
 
     if (verboseVal)
     {
@@ -98,14 +105,14 @@ int main(int argc, char* argv[])
                 wal::Log::get().setLogLevel(wal::Log::ReportLevel::Debug);
             break;
             case VerboseLevels::Info:
-                wal::Log::get().setLogLevel(wal::Log::ReportLevel::Info); 
+                wal::Log::get().setLogLevel(wal::Log::ReportLevel::Info);
             break;
         }
     }
 
     if (args.argExists("--quiet"))
     {
-        wal::Log::get().setLogLevel(wal::Log::ReportLevel::None); 
+        wal::Log::get().setLogLevel(wal::Log::ReportLevel::None);
     }
 
     // readfile
@@ -113,7 +120,7 @@ int main(int argc, char* argv[])
     if (pathStr.empty() || !std::filesystem::exists(pathStr))
     {
         wal::Log::get().err() << "Failed to find file at path " << pathStr;
-        return 2;
+        return PATH_ERR;
     }
 
     std::filesystem::path path{pathStr};
@@ -122,7 +129,7 @@ int main(int argc, char* argv[])
     if (file.bad())
     {
         wal::Log::get().err() << "Failed to read file at path " << path;
-        return 3;
+        return READ_ERR;
     }
 
     wal::readers::WalHeaderReader header;
@@ -132,14 +139,14 @@ int main(int argc, char* argv[])
     {
         wal::Log::get().err() << "Failed to read the header of the file (file may be too small)";
         file.close();
-        return 4;
+        return HEAD_READ_ERR;
     }
 
     bool skipInvalidFrames = args.argExists("--valid-frames");
 
-    if ( verboseVal && verboseVal.value() == VerboseLevels::Debug ) 
-    { 
-        printWalHeader(header); 
+    if ( verboseVal && verboseVal.value() == VerboseLevels::Debug )
+    {
+        printWalHeader(header);
     }
 
     int formatterId = wal::formatters::CSVFormatter::id;
@@ -172,7 +179,7 @@ int main(int argc, char* argv[])
     if ( nullptr == formatterInput )
     {
         wal::Log::get().err() << "Didn't get any option: --csv, --sql";
-        return 6;
+        return MISSING_OPT_ERR;
     }
     formatter->setInput(std::move(formatterInput));
 
@@ -259,4 +266,6 @@ int main(int argc, char* argv[])
     {
         std::cout << *rit << std::endl;
     }
+
+    return EXIT_OK;
 }
