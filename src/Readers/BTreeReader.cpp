@@ -4,7 +4,7 @@
 
 using namespace wal::readers;
 
-void BTreeReader::readHeader(FixedRuntimeArray<uint8_t>::iterator& dataIt) 
+void BTreeReader::readHeader(FixedRuntimeArray<uint8_t>::iterator& dataIt)
 {
     std::array<uint8_t, sizeof(_btreeHeader)> buffer;
     std::copy(dataIt, dataIt+sizeof( _btreeHeader ), buffer.begin());

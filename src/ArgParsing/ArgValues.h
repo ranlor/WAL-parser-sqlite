@@ -34,7 +34,7 @@ namespace wal::arg_parsing
                     if ( validArgs.contains(ANY_VAL) ) { return arg; }
                 }
                 return validArgs.at(arg);
-            }   
+            }
 
             size_t size() const { return validArgs.size(); }
 

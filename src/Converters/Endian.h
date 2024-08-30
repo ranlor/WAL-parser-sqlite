@@ -14,7 +14,7 @@ namespace wal::converters {
 
                 TYPE ret = 0;
                 TYPE mask = ret | 0xFF;
-                for (int i=0; i<MV_ARRAY.size(); ++i) 
+                for (int i=0; i<MV_ARRAY.size(); ++i)
                 {
                     ret |= (MV_ARRAY[i] > 0 ? (mask & value) << MV_ARRAY[i] : (mask & value) >> (MV_ARRAY[i]*-1));
                     mask = mask << 8;

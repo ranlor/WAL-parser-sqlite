@@ -4,11 +4,11 @@
 #pragma once
 
 namespace wal::converters {
-    // to keep inline with intergral types. 
+    // to keep inline with intergral types.
     // c++23 should have std::float*_t
     using float64_t = double;
-    
-    struct FromData 
+
+    struct FromData
     {
         private:
             template <size_t N>
@@ -24,12 +24,12 @@ namespace wal::converters {
             static inline RET toThis(const FixedRuntimeArray<uint8_t>& data)
             {
                 static_assert(std::is_integral_v<RET>, "return time must be integral type");
-                if (data.size() < SIZE ) 
-                { 
+                if (data.size() < SIZE )
+                {
                     std::string message = "Unable to convert data vector to ";
                     message += TYPE_STR.value;
                     message += " from " + std::to_string(data.size()) + " bytes, not enough data";
-                    throw std::runtime_error(message); 
+                    throw std::runtime_error(message);
                 }
 
                 RET v = 0;

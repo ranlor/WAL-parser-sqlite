@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.22)
 project(walParserTests)
 
-set(sourceFiles 
+set(sourceFiles
     BigEndianConvertTest.cpp
     FixedRuntimeArrayTests.cpp
     RecordHeaderReaderTests.cpp
@@ -15,7 +15,7 @@ set(sourceFiles
     ${CMAKE_SOURCE_DIR}/src/Formatters/CSVFormatter.cpp
     )
 
-    
+
 add_executable(wal-parser-tests ${sourceFiles})
 
 set_property(TARGET wal-parser-tests PROPERTY CXX_STANDARD 23)

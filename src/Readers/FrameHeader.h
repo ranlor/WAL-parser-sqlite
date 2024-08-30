@@ -26,7 +26,7 @@ namespace wal::readers {
             PROP(salt2)
             PROP(checksum1)
             PROP(checksum2)
-    
+
         private:
             struct WalFrameHeader {
                 uint32_t pageNumber = 0;

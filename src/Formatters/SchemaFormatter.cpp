@@ -33,9 +33,9 @@ namespace {
         {
             if (*i == ')') { counter--; }
             if (*i == '(') { counter++; }
-            if (counter == 0) 
-            { 
-                stop = i; 
+            if (counter == 0)
+            {
+                stop = i;
                 break;
             }
         }
@@ -53,11 +53,11 @@ namespace {
         for( ; cIt != range.stop; (isReverse ? --cIt : ++cIt) )
         {
             if ( std::isspace(*cIt) && endToken ) { continue; }
-            if ( isNameChar(*cIt) ) 
-            { 
-                endToken = false; 
+            if ( isNameChar(*cIt) )
+            {
+                endToken = false;
                 name+=*cIt;
-                continue; 
+                continue;
             }
             if (!std::isspace(*cIt)) { name.clear(); }
             break;
@@ -65,7 +65,7 @@ namespace {
 
         if (name.empty()) { return {name, cIt}; }
 
-        if (isReverse) 
+        if (isReverse)
         {
             std::reverse(name.begin(), name.end());
             cIt-=2;
@@ -75,7 +75,7 @@ namespace {
     }
 
     /**
-     * @brief get the starting position of 'token' after 'offset' 
+     * @brief get the starting position of 'token' after 'offset'
      * while only ignoring white space, this means that if this gets a non whitespace character
      * and it's not the token it will return as not found
      * @param token combination of chars to look for
@@ -85,15 +85,15 @@ namespace {
     std::string::const_iterator tokenPos(std::string_view token,const SchemaFormatter::Range<const std::string>& range)
     {
         const auto dist = std::distance(range.start,range.stop);
-        if (dist >= 0) 
-        { 
-            return tokenizers::tokenPos(token.begin(), token.end(), range.start, range.stop); 
+        if (dist >= 0)
+        {
+            return tokenizers::tokenPos(token.begin(), token.end(), range.start, range.stop);
         }
-        else 
-        { 
+        else
+        {
             auto rstart = std::make_reverse_iterator(range.start);
             auto rstop = std::make_reverse_iterator(range.stop);
-            return tokenizers::tokenPos(token.rbegin(), token.rend(), rstart, rstop).base(); 
+            return tokenizers::tokenPos(token.rbegin(), token.rend(), rstart, rstop).base();
         }
     }
 
@@ -148,8 +148,8 @@ std::string SchemaFormatter::generateOutput(const readers::RecordHeaderReader::R
         parseSchema();
     }
 
-    if (record.headerData.size() != _columnNames.size() && _strict) 
-    { 
+    if (record.headerData.size() != _columnNames.size() && _strict)
+    {
         Log::get().err() << "mismatch between given schema and data on file: expected " << _columnNames.size() << " tuples got: " << record.headerData.size() << ". skipping...";
         return {};
     }
@@ -168,9 +168,9 @@ std::string SchemaFormatter::generateOutput(const readers::RecordHeaderReader::R
     comma = "";
 
     // verify that the primary key position is a null value
-    if ( _primaryKeyIndex != noPrimaryKeyIndex && 
+    if ( _primaryKeyIndex != noPrimaryKeyIndex &&
          record.headerData[_primaryKeyIndex].getType() != wal::types::RecordSerialTypes::Null )
-    {   
+    {
         throw SchemaFormatterException("Primary key invalid position", errorCode::InvalidPrimaryKeyPosition );
     }
 
@@ -209,7 +209,7 @@ std::string SchemaFormatter::generateOutput(const readers::RecordHeaderReader::R
             case wal::types::RecordSerialTypes::FloatBE:
                 ss << std::dec << rec.asFloat64();
             break;
-            default: 
+            default:
             {
                 std::stringstream ss;
                 ss << "unexpected column type on generateOutput: " << rec.getType();
@@ -279,11 +279,11 @@ std::string::const_iterator SchemaFormatter::parseParams(const Range<const std::
     // per entrance take column name
     constexpr const std::string_view delim = ",";
     tokenizers::split(localCopy, delim, [this](const std::string& part){
-        if (!isTableConstraint(part)) 
+        if (!isTableConstraint(part))
         {
             auto columnNameInfo = extractColnameFrom({part.begin(),part.end()});
             if (columnNameInfo.first.empty()) { throw SchemaFormatterException("malformed colname found", errorCode::MalformedColumnDefinition); }
-            _columnNames.emplace_back( columnNameInfo.first );    
+            _columnNames.emplace_back( columnNameInfo.first );
         }
         return true;
     });
@@ -307,7 +307,7 @@ size_t SchemaFormatter::findPrimaryColumnIndex(const Range<const std::string>& r
         auto colNameInfo = extractColnameFrom(Range<const std::string>{pos,range.stop});
         name = colNameInfo.first;
     }
-    else 
+    else
     {
         // find pattern CREATE TABLE t(x INTEGER PRIMARY KEY ASC, y, z);
         pos = tokenPos( "INTEGER", { it, range.start } );
@@ -345,4 +345,4 @@ bool SchemaFormatter::isTableConstraint(const std::string& column) const
     }
 
     return false;
-}   
+}

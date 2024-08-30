@@ -7,10 +7,10 @@ namespace wal {
     {
         public:
             OsstreamBubbleWrap(std::ostream& ostream, std::string_view prefix):
-                _ss(ostream.rdbuf()), 
-                _pf(prefix) 
+                _ss(ostream.rdbuf()),
+                _pf(prefix)
             {}
-            
+
             ~OsstreamBubbleWrap() { _ss << std::endl; }
 
             template<typename T>
@@ -23,8 +23,8 @@ namespace wal {
             std::ostream _ss;
             std::string _pf;
     };
-    
-    class Log 
+
+    class Log
     {
         public:
             enum class ReportLevel

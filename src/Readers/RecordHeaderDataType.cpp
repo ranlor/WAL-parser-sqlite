@@ -3,8 +3,8 @@
 #include "Converters/Endian.h"
 
 using namespace wal::readers;
-            
-RecordHeaderDataType::RecordHeaderDataType(const types::RecordSerialTypes& type, 
+
+RecordHeaderDataType::RecordHeaderDataType(const types::RecordSerialTypes& type,
                                            const FixedRuntimeArray<uint8_t>& data):
     type(type),
     data(data)
@@ -12,7 +12,7 @@ RecordHeaderDataType::RecordHeaderDataType(const types::RecordSerialTypes& type,
 
 std::string RecordHeaderDataType::asString() const
 {
-    if (types::RecordSerialTypes::String != type) { return {}; } 
+    if (types::RecordSerialTypes::String != type) { return {}; }
     std::string ret;
     ret.resize(data.size());
     std::memcpy(ret.data(),(const void *) data.data(), data.size());
@@ -21,7 +21,7 @@ std::string RecordHeaderDataType::asString() const
 
 std::vector<uint8_t> RecordHeaderDataType::asData() const
 {
-    if (types::RecordSerialTypes::Blob != type) { return {}; } 
+    if (types::RecordSerialTypes::Blob != type) { return {}; }
     std::vector<uint8_t> ret;
     ret.reserve(data.size());
     for (auto& b: data) { ret.push_back(b); }
@@ -30,15 +30,15 @@ std::vector<uint8_t> RecordHeaderDataType::asData() const
 
 uint8_t RecordHeaderDataType::asUInt8() const
 {
-    if (types::RecordSerialTypes::One == type) { return 1; } 
+    if (types::RecordSerialTypes::One == type) { return 1; }
 
-    if (types::RecordSerialTypes::ByteInt != type) { return 0; } 
+    if (types::RecordSerialTypes::ByteInt != type) { return 0; }
     return data[0];
 }
 
 uint16_t RecordHeaderDataType::asUInt16() const
 {
-    if (types::RecordSerialTypes::TwoBytesIntBE == type) 
+    if (types::RecordSerialTypes::TwoBytesIntBE == type)
     {
         return converters::Endian::fromBig(converters::FromData::toUInt16(data));
     }
@@ -47,11 +47,11 @@ uint16_t RecordHeaderDataType::asUInt16() const
 
 uint32_t RecordHeaderDataType::asUInt32() const
 {
-    if (types::RecordSerialTypes::ThreeBytesIntBE == type) 
+    if (types::RecordSerialTypes::ThreeBytesIntBE == type)
     {
         return converters::Endian::fromBig(converters::FromData::toUInt32FromThreeBytes(data));
     }
-    if (types::RecordSerialTypes::FourBytesIntBE == type) 
+    if (types::RecordSerialTypes::FourBytesIntBE == type)
     {
         return converters::Endian::fromBig(converters::FromData::toUInt32(data));
     }
@@ -60,11 +60,11 @@ uint32_t RecordHeaderDataType::asUInt32() const
 
 uint64_t RecordHeaderDataType::asUInt64() const
 {
-    if (types::RecordSerialTypes::SixBytesIntBE == type) 
+    if (types::RecordSerialTypes::SixBytesIntBE == type)
     {
         return converters::Endian::fromBig(converters::FromData::toUInt64FromSixBytes(data));
     }
-    if (types::RecordSerialTypes::EightBytesIntBE == type) 
+    if (types::RecordSerialTypes::EightBytesIntBE == type)
     {
         return converters::Endian::fromBig(converters::FromData::toUInt64(data));
     }
@@ -79,4 +79,3 @@ wal::converters::float64_t RecordHeaderDataType::asFloat64() const
     }
     return static_cast<converters::float64_t>(asUInt64());
 }
-

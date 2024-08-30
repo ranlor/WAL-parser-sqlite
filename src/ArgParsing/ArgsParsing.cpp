@@ -2,9 +2,9 @@
 
 using namespace wal::arg_parsing;
 
-ArgsParsing::ArgsParsing(std::string_view programName, 
-                         std::string_view description, 
-                         int argc, 
+ArgsParsing::ArgsParsing(std::string_view programName,
+                         std::string_view description,
+                         int argc,
                          char* argv[]):_args({})
 {
     for (int i=1; i<argc; ++i)
@@ -23,7 +23,7 @@ void ArgsParsing::createUsage(const ArgName& name, std::string_view desc, bool o
     ss << name.name;
     if ( !name.shortName.empty() ) { ss << "|" << name.shortName; }
     ss << ": ";
-    ss << (optional ? "(Optional) " : "" ); 
+    ss << (optional ? "(Optional) " : "" );
     ss << desc;
     if ( !desc.ends_with(".") ) { ss << "."; }
     if ( !args.empty() ) { ss << " Valid values: " << args; }

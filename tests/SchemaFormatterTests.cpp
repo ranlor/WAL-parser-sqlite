@@ -15,7 +15,7 @@ TEST(SchemaFormatterTests,SimpleCreateStatement)
     formatter->setInput(std::make_unique<wal::formatters::inputs::StringInput>(sql));
 
     wal::readers::RecordHeaderReader::RecordData data = {
-       { 
+       {
         {RecordSerialTypes::FourBytesIntBE, {0x00,0x00,0x00,0x01} }
        },
        0 //rowid
@@ -36,8 +36,8 @@ TEST(SchemaFormatterTests,MultipleSimpleCreateStatement)
     formatter->setInput(std::make_unique<wal::formatters::inputs::StringInput>(sql));
 
     wal::readers::RecordHeaderReader::RecordData data = {
-       { 
-        {RecordSerialTypes::FourBytesIntBE, {0x00,0x00,0x00,0x01} }, 
+       {
+        {RecordSerialTypes::FourBytesIntBE, {0x00,0x00,0x00,0x01} },
         {RecordSerialTypes::FourBytesIntBE, {0x00,0x00,0x00,0x02} }
        },
        0 //rowid
@@ -54,7 +54,7 @@ TEST(SchemaFormatterTests,TableWithBlob)
     formatter->setInput(std::make_unique<wal::formatters::inputs::StringInput>(sql));
 
     wal::readers::RecordHeaderReader::RecordData data = {
-       { 
+       {
         {RecordSerialTypes::Blob, {0x41,0x41,0x41,0x41,0x41,0x41,0x41,0x41,0x41,0x41,0x41,0x41,0x41,0x41,0x56} }
        },
        0 //rowid
@@ -71,13 +71,13 @@ TEST(SchemaFormatterTests,FailOnMissingTableName)
     formatter->setInput(std::make_unique<wal::formatters::inputs::StringInput>(sql));
 
     wal::readers::RecordHeaderReader::RecordData data = {
-       { 
-        {RecordSerialTypes::FourBytesIntBE, {0x00,0x00,0x00,0x01} }, 
+       {
+        {RecordSerialTypes::FourBytesIntBE, {0x00,0x00,0x00,0x01} },
         {RecordSerialTypes::FourBytesIntBE, {0x00,0x00,0x00,0x02} }
        },
        0 //rowid
     };
-        
+
     try { formatter->generateOutput(data); }
     catch (formatException& e)
     {
@@ -94,13 +94,13 @@ TEST(SchemaFormatterTests,PrimaryKeyPattern1)
     formatter->setInput(std::make_unique<wal::formatters::inputs::StringInput>(sql));
 
     wal::readers::RecordHeaderReader::RecordData data = {
-       { 
+       {
         {RecordSerialTypes::Null, {}},
         {RecordSerialTypes::FourBytesIntBE, {0x00,0x00,0x00,0x02} }
        },
        44 //rowid
     };
-        
+
     constexpr auto expectedOutput = "INSERT INTO foo (col1, col2) VALUES (44, 2);";
     ASSERT_EQ(formatter->generateOutput(data), expectedOutput);
 }
@@ -113,13 +113,13 @@ TEST(SchemaFormatterTests,PrimaryKeyPattern2)
     formatter->setInput(std::make_unique<wal::formatters::inputs::StringInput>(sql));
 
     wal::readers::RecordHeaderReader::RecordData data = {
-       { 
+       {
         {RecordSerialTypes::Null, {}},
         {RecordSerialTypes::FourBytesIntBE, {0x00,0x00,0x00,0x02} }
        },
        46 //rowid
     };
-        
+
     constexpr auto expectedOutput = "INSERT INTO foo (col1, col2) VALUES (46, 2);";
     ASSERT_EQ(formatter->generateOutput(data), expectedOutput);
 }
@@ -132,13 +132,13 @@ TEST(SchemaFormatterTests,PrimaryKeyPattern1NotFirst)
     formatter->setInput(std::make_unique<wal::formatters::inputs::StringInput>(sql));
 
     wal::readers::RecordHeaderReader::RecordData data = {
-       { 
+       {
         {RecordSerialTypes::FourBytesIntBE, {0x00,0x00,0x00,0x02} },
         {RecordSerialTypes::Null, {}}
        },
        45 //rowid
     };
-        
+
     constexpr auto expectedOutput = "INSERT INTO foo (col1, col2) VALUES (2, 45);";
     ASSERT_EQ(formatter->generateOutput(data), expectedOutput);
 }
@@ -151,13 +151,13 @@ TEST(SchemaFormatterTests,PrimaryKeyPattern2NotFirst)
     formatter->setInput(std::make_unique<wal::formatters::inputs::StringInput>(sql));
 
     wal::readers::RecordHeaderReader::RecordData data = {
-       { 
+       {
         {RecordSerialTypes::FourBytesIntBE, {0x00,0x00,0x00,0x02} },
         {RecordSerialTypes::Null, {}}
        },
        47 //rowid
     };
-        
+
     constexpr auto expectedOutput = "INSERT INTO foo (col1, col2) VALUES (2, 47);";
     ASSERT_EQ(formatter->generateOutput(data), expectedOutput);
 }
@@ -171,13 +171,13 @@ TEST(SchemaFormatterTests,PrimaryKeyWrongPlacement)
     formatter->setInput(std::make_unique<wal::formatters::inputs::StringInput>(sql));
 
     wal::readers::RecordHeaderReader::RecordData data = {
-       { 
+       {
         {RecordSerialTypes::FourBytesIntBE, {0x00,0x00,0x00,0x02} },
         {RecordSerialTypes::Null, {}}
        },
        47 //rowid
     };
-        
+
     try { formatter->generateOutput(data); }
     catch (formatException& e)
     {
@@ -194,13 +194,13 @@ TEST(SchemaFormatterTests,PrimaryKeyPattern1Invalid)
     formatter->setInput(std::make_unique<wal::formatters::inputs::StringInput>(sql));
 
     wal::readers::RecordHeaderReader::RecordData data = {
-       { 
+       {
         {RecordSerialTypes::Null, {}},
         {RecordSerialTypes::FourBytesIntBE, {0x00,0x00,0x00,0x02} }
        },
        46 //rowid
     };
-        
+
     try { formatter->generateOutput(data); }
     catch (formatException& e)
     {
@@ -217,13 +217,13 @@ TEST(SchemaFormatterTests,PrimaryKeyPattern1InvalidAlternate)
     formatter->setInput(std::make_unique<wal::formatters::inputs::StringInput>(sql));
 
     wal::readers::RecordHeaderReader::RecordData data = {
-       { 
+       {
         {RecordSerialTypes::Null, {}},
         {RecordSerialTypes::FourBytesIntBE, {0x00,0x00,0x00,0x02} }
        },
        46 //rowid
     };
-        
+
     try { formatter->generateOutput(data); }
     catch (formatException& e)
     {
@@ -240,13 +240,13 @@ TEST(SchemaFormatterTests,PrimaryKeyPattern2Invalid)
     formatter->setInput(std::make_unique<wal::formatters::inputs::StringInput>(sql));
 
     wal::readers::RecordHeaderReader::RecordData data = {
-       { 
+       {
         {RecordSerialTypes::Null, {}},
         {RecordSerialTypes::FourBytesIntBE, {0x00,0x00,0x00,0x02} }
        },
        46 //rowid
     };
-        
+
     try { formatter->generateOutput(data); }
     catch (formatException& e)
     {
@@ -264,13 +264,13 @@ TEST(SchemaFormatterTests,MalformedTableParentesis)
     formatter->setInput(std::make_unique<wal::formatters::inputs::StringInput>(sql));
 
     wal::readers::RecordHeaderReader::RecordData data = {
-       { 
-        {RecordSerialTypes::FourBytesIntBE, {0x00,0x00,0x00,0x01} }, 
+       {
+        {RecordSerialTypes::FourBytesIntBE, {0x00,0x00,0x00,0x01} },
         {RecordSerialTypes::FourBytesIntBE, {0x00,0x00,0x00,0x02} }
        },
        0 //rowid
     };
-        
+
     try { formatter->generateOutput(data); }
     catch (formatException& e)
     {
@@ -287,13 +287,13 @@ TEST(SchemaFormatterTests,MalformedTableParentesis2)
     formatter->setInput(std::make_unique<wal::formatters::inputs::StringInput>(sql));
 
     wal::readers::RecordHeaderReader::RecordData data = {
-       { 
-        {RecordSerialTypes::FourBytesIntBE, {0x00,0x00,0x00,0x01} }, 
+       {
+        {RecordSerialTypes::FourBytesIntBE, {0x00,0x00,0x00,0x01} },
         {RecordSerialTypes::FourBytesIntBE, {0x00,0x00,0x00,0x02} }
        },
        0 //rowid
     };
-        
+
     try { formatter->generateOutput(data); }
     catch (formatException& e)
     {
@@ -337,7 +337,7 @@ TEST(SchemaFormatterTests,allTypes)
     formatter->setInput(std::make_unique<wal::formatters::inputs::StringInput>(sql));
 
     wal::readers::RecordHeaderReader::RecordData data = {
-       { 
+       {
         {RecordSerialTypes::FourBytesIntBE, {0x00,0x00,0x00,0x01} }, // INTEGER
         {RecordSerialTypes::FourBytesIntBE, {0x00,0x00,0x00,0x02} }, // INT
         {RecordSerialTypes::ByteInt, {0x03} }, // TINYINT
@@ -368,11 +368,11 @@ TEST(SchemaFormatterTests,allTypes)
        },
        0 //rowid
     };
-        
+
     // currently we only process the first statment
     constexpr auto expectedOutput = "INSERT INTO foo "
-    "(a, b, c, d, e, f, g, h, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, ab) " 
-    "VALUES " 
+    "(a, b, c, d, e, f, g, h, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa, ab) "
+    "VALUES "
     "(1, 2, 3, 4, 1280, 393216, 393216, 7, 8, \"AAAAAAAAAAAAAAI\", \"AAAAAAAAAAAAAAP\", \"AAAAAAAAAAAAAAQ\", \"AAAAAAAAAAAAAAR\", \"AAAAAAAAAAAAAAS\", \"AAAAAAAAAAAAAAT\", \"AAAAAAAAAAAAAAU\", \"AAAAAAAAAAAAAAU\", 0x0A0A0A0A0A0A0A0A0A0A0A0A0A0A0V, 7.26239e+16, 1.44681e+17, 2.16739e+17, 2.88797e+17, 16, 4.32912e+17, 1, 17, 18);";
     ASSERT_EQ(formatter->generateOutput(data), expectedOutput);
 }

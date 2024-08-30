@@ -106,7 +106,7 @@ TEST(FixedRuntimeArray, exceedArraySizeTest)
             int val = *a;
             ++a;
             ASSERT_TRUE( val == dval, "value is mismatch");
-        }    
+        }
     }
     catch(const std::out_of_range& e)
     {

@@ -14,9 +14,9 @@ namespace wal::arg_parsing
     class ArgsParsing
     {
         public:
-            ArgsParsing(std::string_view programName, 
-                        std::string_view description, 
-                        int argc, 
+            ArgsParsing(std::string_view programName,
+                        std::string_view description,
+                        int argc,
                         char* argv[]);
 
             ~ArgsParsing() = default;
@@ -44,20 +44,20 @@ namespace wal::arg_parsing
                 if (name.name.empty()) { throw std::runtime_error("argument name is mandatory"); }
 
                 createUsage(name, desc, optional, (args.size() > 0 ? args.toString() : "") );
-                
+
                 auto argInfo = isInArguments(name);
-                if ( !argInfo.isFound ) 
+                if ( !argInfo.isFound )
                 {
                     if (optional) { return; }
                     error("missing non-optional argument: ", name.name);
-                    return; 
+                    return;
                 }
 
                 if ( args.size() > 0 )
                 {
                     auto argIt = ++argInfo.pos;
-                    if (std::distance(argIt ,_args.cend()) <= 0) 
-                    { 
+                    if (std::distance(argIt ,_args.cend()) <= 0)
+                    {
                         error("missing argument-value for argument: ", name.name);
                         return;
                     }
@@ -97,7 +97,7 @@ namespace wal::arg_parsing
             std::vector<std::string> _usage;
             std::list<std::string> _errors;
 
-            struct ArgFound 
+            struct ArgFound
             {
                 bool isFound;
                 std::vector<std::string>::const_iterator pos;

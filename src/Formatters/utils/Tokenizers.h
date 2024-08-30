@@ -7,13 +7,13 @@
 namespace wal::formatters::tokenizers {
 
     /**
-     * @brief 
-     * 
-     * @tparam IT 
-     * @param token 
-     * @param start 
-     * @param stop 
-     * @return std::string::iterator 
+     * @brief
+     *
+     * @tparam IT
+     * @param token
+     * @param start
+     * @param stop
+     * @return std::string::iterator
      */
     template<typename TIT, typename IT>
     IT tokenPos(const TIT& tokenStart, const TIT& tokenStop, const IT& start, const IT& stop)
@@ -25,8 +25,8 @@ namespace wal::formatters::tokenizers {
         for (auto i = start; i != stop; ++i)
         {
             auto c = *i;
-            if (std::isspace(c)) 
-            { 
+            if (std::isspace(c))
+            {
                 continue;
             }
 
@@ -46,8 +46,8 @@ namespace wal::formatters::tokenizers {
         return stop;
     }
 
-    inline void split(std::string_view input, 
-                      std::string_view delim, 
+    inline void split(std::string_view input,
+                      std::string_view delim,
                       const std::function<bool(const std::string&)>& callback,
                       bool skipEmpty = true)
     {

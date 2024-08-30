@@ -10,9 +10,9 @@ _streamNull(nullptr),
 _level(ReportLevel::Info)
 {}
 
-void Log::setLogLevel(const ReportLevel& level) 
-{ 
-    _level = level; 
+void Log::setLogLevel(const ReportLevel& level)
+{
+    _level = level;
 }
 
 OsstreamBubbleWrap Log::debug()

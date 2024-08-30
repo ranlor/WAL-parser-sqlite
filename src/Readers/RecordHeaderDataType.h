@@ -7,12 +7,12 @@
 
 namespace wal::readers {
 
-    class RecordHeaderDataType 
+    class RecordHeaderDataType
     {
         friend class RecordHeaderReader;
         public:
-            
-            RecordHeaderDataType(const types::RecordSerialTypes& type, 
+
+            RecordHeaderDataType(const types::RecordSerialTypes& type,
                                     const FixedRuntimeArray<uint8_t>& data);
 
             types::RecordSerialTypes getType() const { return type; }
@@ -24,7 +24,7 @@ namespace wal::readers {
             bool isNull() const { return types::RecordSerialTypes::Null == type; }
 
             uint8_t asUInt8() const;
-            
+
             uint16_t asUInt16() const;
 
             uint32_t asUInt32() const;

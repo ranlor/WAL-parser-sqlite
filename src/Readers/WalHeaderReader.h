@@ -28,7 +28,7 @@ namespace wal::readers {
             PROP(salt2)
             PROP(checksum1)
             PROP(checksum2)
-    
+
         private:
             struct WalHeader {
                 uint32_t header = 0;

@@ -5,7 +5,7 @@
 
 namespace wal::converters {
 
-    struct VarInt 
+    struct VarInt
     {
         public:
 
@@ -13,19 +13,19 @@ namespace wal::converters {
             {
                 auto localIt = dataIt;
 
-                if (localIt[0] >= 0 && localIt[0] <= 240) 
+                if (localIt[0] >= 0 && localIt[0] <= 240)
                 {
                     ++dataIt;
                     return localIt[0];
                 }
 
-                if (localIt[0] >= 241 && localIt[0] <= 248) 
+                if (localIt[0] >= 241 && localIt[0] <= 248)
                 {
                     dataIt+=2;
                     return 240+256*(localIt[0]-241)+localIt[1];
                 }
 
-                if (localIt[0] == 249) 
+                if (localIt[0] == 249)
                 {
                     dataIt+=3;
                     return 2288+256*localIt[1]+localIt[2];
@@ -45,7 +45,7 @@ namespace wal::converters {
                     v = (v | localIt[2]) << 8;
                     v = (v | localIt[1]);
                     dataIt+=4;
-                } 
+                }
 
                 return v;
             }
@@ -58,9 +58,9 @@ namespace wal::converters {
                 auto localIt = dataIt;
                 ++dataIt;
                 uint64_t v = 0;
-                for (int i=0; i<maxSize-1; ++i) 
+                for (int i=0; i<maxSize-1; ++i)
                 {
-                    if (localIt[i] <= lastSevenBits) 
+                    if (localIt[i] <= lastSevenBits)
                     {
                         v |= localIt[i];
                         return v;

@@ -5,7 +5,7 @@
 using namespace wal::formatters::inputs;
 
 namespace {
-    
+
     void readFile(const std::filesystem::path& pathToSchema,std::string& buffer)
     {
         if (!std::filesystem::exists(pathToSchema)) { throw std::runtime_error("Failed to find schema file at path"); }

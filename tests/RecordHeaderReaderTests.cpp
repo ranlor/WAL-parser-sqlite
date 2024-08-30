@@ -8,9 +8,9 @@ TEST(RecordHeaderReaderTests, ReadHeaderTwo16UIntsLeftIndexNode)
 {
     wal::FixedRuntimeArray<uint8_t> data = {
         0x07, // total payload size
-        0x03, // header total size 
-        (uint8_t) wal::types::RecordSerialTypes::TwoBytesIntBE, 
-        (uint8_t)wal::types::RecordSerialTypes::TwoBytesIntBE, 
+        0x03, // header total size
+        (uint8_t) wal::types::RecordSerialTypes::TwoBytesIntBE,
+        (uint8_t)wal::types::RecordSerialTypes::TwoBytesIntBE,
         0x01, 0x02,
         0x03, 0x04};
 
@@ -28,7 +28,7 @@ TEST(RecordHeaderReaderTests, ReadHeaderTwo16UIntsLeftIndexNode)
     for (int i=0; i<expected.size(); ++i)
     {
         ASSERT_TRUE(result.headerData[i].getType() == expected[i].getType(), "result type mismatch expected type");
-        
+
         auto uint16value = wal::converters::FromData::toUInt16(expected[i].asRawData());
         ASSERT_TRUE(result.headerData[i].asUInt16() == uint16value, "result value mismatch expected value");
     }
@@ -41,9 +41,9 @@ TEST(RecordHeaderReaderTests, ReadHeaderTwo16UIntsLeftTableNode)
     wal::FixedRuntimeArray<uint8_t> data = {
         0x08, // total payload size
         0x02, // row id
-        0x03, // header total size 
-        (uint8_t) wal::types::RecordSerialTypes::TwoBytesIntBE, 
-        (uint8_t)wal::types::RecordSerialTypes::TwoBytesIntBE, 
+        0x03, // header total size
+        (uint8_t) wal::types::RecordSerialTypes::TwoBytesIntBE,
+        (uint8_t)wal::types::RecordSerialTypes::TwoBytesIntBE,
         0x01, 0x02,
         0x03, 0x04};
 
@@ -61,7 +61,7 @@ TEST(RecordHeaderReaderTests, ReadHeaderTwo16UIntsLeftTableNode)
     for (int i=0; i<expected.size(); ++i)
     {
         ASSERT_TRUE(result.headerData[i].getType() == expected[i].getType(), "result type mismatch expected type");
-        
+
         auto uint16value = wal::converters::FromData::toUInt16(expected[i].asRawData());
         ASSERT_TRUE(result.headerData[i].asUInt16() == uint16value, "result value mismatch expected value");
     }

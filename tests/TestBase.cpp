@@ -21,7 +21,7 @@ int main(int argc, char** argv)
         {
             std::string fullname = suite+"."+test->getName();
             std::cout << prefix << "Runing [" << fullname << "]" << std::endl;
-            try 
+            try
             {
                 test->runTest();
                 std::cout << prefix <<  "  " << (test->testResult() ? "!Passed!" : "*Failed*") << std::endl;
@@ -34,7 +34,7 @@ int main(int argc, char** argv)
             }
         }
         divider();
-        std::cout << prefix << " " << suite << 
+        std::cout << prefix << " " << suite <<
             " Failed " << failedTests << "/" << testsCount <<
             " Passed " << (testsCount-failedTests) << "/" << testsCount <<
         std::endl;
@@ -43,7 +43,7 @@ int main(int argc, char** argv)
         if (failedTests > 0) { totalSuiteFails++;}
     }
     divider(100,'=');
-    std::cout << prefix << 
+    std::cout << prefix <<
         " Failed " << totalTestFails << " tests in " << totalSuiteFails << " Suites" <<
     std::endl;
     divider(100,'=');

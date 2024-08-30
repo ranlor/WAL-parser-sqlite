@@ -11,7 +11,7 @@ namespace wal::readers {
     class RecordHeaderReader
     {
         public:
-            struct RecordData 
+            struct RecordData
             {
                 std::vector< RecordHeaderDataType > headerData;
                 uint64_t rowid;

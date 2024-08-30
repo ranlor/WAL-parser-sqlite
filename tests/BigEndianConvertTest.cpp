@@ -29,7 +29,7 @@ TEST(BigEndianConvert,TestUint64Convertion)
 TEST(BigEndianConvert,TestFloat64Convertion)
 {
     // although double is 64bit it can only hold 53bit range, these values are in that range
-    // so we don't get into an overflow, 
+    // so we don't get into an overflow,
     double beValue = 0x1.02030401p+32; //0x0102030401000000;
     double leValue = 0x1.04030201p+56; //0x0000000104030201;
 
