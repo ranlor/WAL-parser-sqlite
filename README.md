@@ -48,6 +48,13 @@ FixedRuntimeArray - an "array" that has a size that can be determined in run tim
 
 Should work on Windows when using cmake to generate Visual Studio project
 
+## Running
+
+```
+./build/wal-parser -i /path/to/database.sql-wal --csv "col1,col2,col3" > output.csv
+```
+More details under examples
+
 ## Testing
 
 ```
